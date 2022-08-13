@@ -4,11 +4,11 @@ import cv2
 
 import Adafruit_BBIO.GPIO as GPIO
 
-video_capture = cv2.VideoCapture(-1)
+#video_capture = cv2.VideoCapture(-1)
 
-video_capture.set(3, 160)
+#video_capture.set(3, 160)
 
-video_capture.set(4, 120)
+#video_capture.set(4, 120)
 
 # Setup Output Pins
 
@@ -28,84 +28,87 @@ GPIO.output("P9_11", GPIO.HIGH)
 
 
 def line_follow():
+    global no_line=False
     while (True):
-        # Capture the frames
+        if no_line != True:
+            # Capture the frames
 
-        ret, frame = video_capture.read()
+            #ret, frame = video_capture.read()
 
-        # Crop the image
+            # Crop the image
 
-        crop_img = frame[60:120, 0:160]
+            crop_img = frame[60:120, 0:160]
 
-        # Convert to grayscale
+            # Convert to grayscale
 
-        gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
+            gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
 
-        # Gaussian blur
+            # Gaussian blur
 
-        blur = cv2.GaussianBlur(gray, (5, 5), 0)
+            blur = cv2.GaussianBlur(gray, (5, 5), 0)
 
-        # Color thresholding
+            # Color thresholding
 
-        ret, thresh1 = cv2.threshold(blur, 60, 255, cv2.THRESH_BINARY_INV)
+            ret, thresh1 = cv2.threshold(blur, 60, 255, cv2.THRESH_BINARY_INV)
 
-        # Erode and dilate to remove accidental line detections
+            # Erode and dilate to remove accidental line detections
 
-        mask = cv2.erode(thresh1, None, iterations=2)
+            mask = cv2.erode(thresh1, None, iterations=2)
 
-        mask = cv2.dilate(mask, None, iterations=2)
+            mask = cv2.dilate(mask, None, iterations=2)
 
-        # Find the contours of the frame
+            # Find the contours of the frame
 
-        contours, hierarchy = cv2.findContours(mask.copy(), 1, cv2.CHAIN_APPROX_NONE)
+            contours, hierarchy = cv2.findContours(mask.copy(), 1, cv2.CHAIN_APPROX_NONE)
 
-        # Find the biggest contour (if detected)
-        if len(contours) > 0:
+            # Find the biggest contour (if detected)
+            if len(contours) > 0:
 
-            c = max(contours, key=cv2.contourArea)
+                c = max(contours, key=cv2.contourArea)
 
-            M = cv2.moments(c)
+                M = cv2.moments(c)
 
-            cx = int(M['m10'] / M['m00'])
+                cx = int(M['m10'] / M['m00'])
 
-            cy = int(M['m01'] / M['m00'])
+                cy = int(M['m01'] / M['m00'])
 
-            cv2.line(crop_img, (cx, 0), (cx, 720), (255, 0, 0), 1)
+                cv2.line(crop_img, (cx, 0), (cx, 720), (255, 0, 0), 1)
 
-            cv2.line(crop_img, (0, cy), (1280, cy), (255, 0, 0), 1)
+                cv2.line(crop_img, (0, cy), (1280, cy), (255, 0, 0), 1)
 
-            cv2.drawContours(crop_img, contours, -1, (0, 255, 0), 1)
+                cv2.drawContours(crop_img, contours, -1, (0, 255, 0), 1)
 
-            print cx
+                print cx
+                print cy
 
-            print cy
+        #pid?
 
-            if cx >= 120:
-                GPIO.output("P8_10", GPIO.HIGH)
+                if cx >= 120:
+                    GPIO.output("P8_10", GPIO.HIGH)
 
-                GPIO.output("P9_11", GPIO.LOW)
+                    GPIO.output("P9_11", GPIO.LOW)
 
-            if cx < 120 and cx > 50:
-                GPIO.output("P8_10", GPIO.LOW)
+                if cx < 120 and cx > 50:
+                    GPIO.output("P8_10", GPIO.LOW)
 
-                GPIO.output("P9_11", GPIO.LOW)
+                    GPIO.output("P9_11", GPIO.LOW)
 
-            if cx <= 50:
-                GPIO.output("P8_10", GPIO.LOW)
+                if cx <= 50:
+                    GPIO.output("P8_10", GPIO.LOW)
 
-                GPIO.output("P9_11", GPIO.HIGH)
+                    GPIO.output("P9_11", GPIO.HIGH)
 
 
 
-        else:
+            else:
 
-            # GPIO.output("P8_10", GPIO.HIGH)
-            # GPIO.output("P9_11", GPIO.HIGH)
-            no_line = True
-        # Display the resulting frame
+                # GPIO.output("P8_10", GPIO.HIGH)
+                # GPIO.output("P9_11", GPIO.HIGH)
+                no_line = True
+            # Display the resulting frame
 
-        cv2.imshow('frame', crop_img)
+            cv2.imshow('frame', crop_img)
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+            if cv2.waitKey(1) & 0xFF == ord('q'):
 
-            break
+                break

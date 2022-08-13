@@ -1,9 +1,15 @@
 import RPI.GPIO as GPIO
 import time
-#from /color_detectiion/colorprint/ import scanColor
-#from /line detection/using_cv_demo1/ import line_follow, no_line
+from /color_detectiion/colorprint/ import scanColor
+from /line detection/using_cv_demo1/ import line_follow, no_line
 from crossing import distance
 GPIO.setmode(GPIO.BCM)
+
+from threading import Thread
+
+colorThread = scanColor()
+lineThread = line_follow()
+distanceThread = distance()
 
 motorsleft=1
 motorsright=2
@@ -11,7 +17,7 @@ IO.setup(motorsleft, IO.OUT)#motors left
 IO.setup(motorsright, IO.OUT)#motors right
 
 def forward():
-    GPIO.output(motorsleft, True)
+    .output(motorsleft, True)
     GPIO.output(motorsright, True)
 
 def stop(stoptime):
@@ -22,10 +28,14 @@ def stop(stoptime):
 
 def maiin():
 
-    ######################################needs threading here#################################
-    line_follow()
-    colour = scanColor()
-    dist = distance()
+    #####################################needs threading here#################################
+    #line_follow()
+    #colour = scanColor()
+    #dist = distance()
+
+    colorThread.start()
+    lineThread.start()
+    distanceThread.start()
 
     if dist < 5:
         GPIO.output(motorsleft, False)
@@ -41,10 +51,20 @@ def maiin():
         forward()
         time.sleep(1000)#enough time for line cut 15cm dist
         line_follow()
+          
 
 
-while True:
-    if __name__ == '__main__':
-        webcam = cv2.VideoCapture(0)
-        while (True):
-            maiin()
+if __name__ == '__main__':
+    webcam = cv2.VideoCapture(0)
+    while (True):
+        maiin()
+
+"""
+for when task is done
+
+colorThread.stop()
+lineThread.stop()
+distanceThread.stop()
+
+
+"""
