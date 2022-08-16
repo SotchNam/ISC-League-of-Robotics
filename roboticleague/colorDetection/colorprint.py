@@ -14,12 +14,15 @@ class scanColor(Thread):
     def __init__(self):
         self.color= None
         self.frame= None
+        self.on = False
 
     def start(self):
         Thread(target=self.run,args=()).start()
         return self
+
     def run(self):
-        while True:
+        self.on = True
+        while self.on:
             #delay to improve threading, removes stress from cpu
             time.sleep(1.1)
             #getting smaller picture
@@ -47,7 +50,7 @@ class scanColor(Thread):
 
         #test the avg color with each color range
 
-            #print(avg_color)
+            print(self.frame)
             if  ((np.less_equal(avg_color,red_upper1)).all() and (np.greater_equal(avg_color,red_lower1)).all()) or ((np.less_equal(avg_color,red_upper)).all() and (np.greater_equal(avg_color,red_lower)).all()):
                     self.color= 'R'
 
@@ -69,7 +72,7 @@ if __name__ == '__main__':
         colorThread.start()
         print(colorThread.color)
         if cv2.waitKey(1) & 0xFF == ord('q'):
-                colorThread.exit()
+                colorThread.stop()
                 webcam.release()
                 cv2.destroyAllWindows()
                 break

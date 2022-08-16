@@ -2,10 +2,6 @@ import numpy as np
 import cv2
 import Adafruit_BBIO.GPIO as GPIO
 
-#video_capture = cv2.VideoCapture(-1)
-#video_capture.set(3, 160)
-#video_capture.set(4, 120)
-
 class line_follow():
     def __init__(self):
         self.cx = None
@@ -38,16 +34,14 @@ class line_follow():
             if len(contours) > 0:
                 c = max(contours, key=cv2.contourArea)
                 M = cv2.moments(c)
-                cx = int(M['m10'] / M['m00'])
-                cy = int(M['m01'] / M['m00'])
+                self.cx = int(M['m10'] / M['m00'])
+                self.cy = int(M['m01'] / M['m00'])
                 #cv2.line(crop_img, (cx, 0), (cx, 720), (255, 0, 0), 1)
                 #cv2.line(crop_img, (0, cy), (1280, cy), (255, 0, 0), 1)
                 #cv2.drawContours(crop_img, contours, -1, (0, 255, 0), 1)
 
             else:
-                # GPIO.output("P8_10", GPIO.HIGH)
-                # GPIO.output("P9_11", GPIO.HIGH)
-                no_line = True
+                self.no_line = True
 
 
     def stop(self):
