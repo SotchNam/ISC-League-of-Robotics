@@ -50,7 +50,7 @@ class scanColor(Thread):
 
         #test the avg color with each color range
 
-            print(self.frame)
+            #print(self.frame)
             if  ((np.less_equal(avg_color,red_upper1)).all() and (np.greater_equal(avg_color,red_lower1)).all()) or ((np.less_equal(avg_color,red_upper)).all() and (np.greater_equal(avg_color,red_lower)).all()):
                     self.color= 'R'
 
