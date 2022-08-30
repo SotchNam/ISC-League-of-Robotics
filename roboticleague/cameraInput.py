@@ -7,6 +7,7 @@ class camera(Thread):
         self.frame= None
         self.webcam = cv2.VideoCapture(0)
         self.on = False
+        super().__init__()
 
     def start(self):
         Thread(target=self.run,args=()).start()
