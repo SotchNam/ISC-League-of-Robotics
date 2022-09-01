@@ -1,8 +1,9 @@
 # Libraries
 import RPi.GPIO as GPIO
 import time
+from threading import Thread
 
-class distance():
+class distance(Thread):
     def __init__(self):
         # GPIO Mode (BOARD / BCM)
         GPIO.setmode(GPIO.BCM)
@@ -17,6 +18,7 @@ class distance():
 
         self.dist = 0
         self.on= False
+        super().__init__()
 
     def start(self):
         Thread(target = self.run,args=()).start()
