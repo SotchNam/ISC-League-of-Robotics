@@ -8,26 +8,12 @@ from cameraInput import camera
 import cv2
 from threading import Thread, enumerate, main_thread
 from time import sleep 
+
 #import RPI.GPIO as GPIO
+#import Falcon
+#GPIO.setmode(gpio.BCM)
 
 
-"""
-#init gpio
-#GPIO.setmode(GPIO.BCM)
-# Setup Output Pins
-# Left Forward
-GPIO.setup("P8_10", GPIO.OUT)
-# Right Forward
-GPIO.setup("P9_11", GPIO.OUT)
-
-# start the motors
-GPIO.output("P8_10", GPIO.HIGH)
-GPIO.output("P9_11", GPIO.HIGH)
-motorsleft=1
-motorsright=2
-#IO.setup(motorsleft, IO.OUT)#motors left
-#IO.setup(motorsright, IO.OUT)#motors right
-"""
 
 #init threads
 cameraThread = camera()
@@ -36,21 +22,27 @@ lineThread = line_follow()
 #distanceThread = distance()
 
 """
-def forward():
-    GPIO.output(motorsleft, True)
-    GPIO.output(motorsright, True)
+#-------#Setup Pinouts-------#
+max_speed= 70
+min_speed= 64
 
-def stop():
-    GPIO.output(motorsleft, False)
-    GPIO.output(motorsright, False)
-
-def left():
-    GPIO.output(motorsleft, False)
-    GPIO.output(motorsright, True)
-
-def right():
-    GPIO.output(motorsleft, True)
-    GPIO.output(motorsright, False)
+en1=20
+en2=21
+in1=17
+in2=22
+in3=23
+in4=24
+gpio.setmode(gpio.BCM)
+gpio.setup(in1, gpio.OUT)
+gpio.setup(in2, gpio.OUT)
+gpio.setup(in3, gpio.OUT)
+gpio.setup(in4, gpio.OUT)
+gpio.setup(en1,gpio.OUT)
+gpio.setup(en2,gpio.OUT)
+#p1 = gpio.PWM(en1, 100)
+#p2 = gpio.PWM(en2, 100)
+Falcon.Stop()
+#----------------------------#
 """
 
 #control the car
@@ -58,43 +50,44 @@ def maiin():
 
     """
     if dist < 5: #ultrasonic stop
-        stop()
+        Falcon.Stop()
         print("stopped")
 
     elif colour == R or colour == G:
-        stop()
+        Falcon.Stop()
         sleep(5)
 
     elif colour == B:
-        stop()
+        Falcon.Stop()
         sleep(2)
 
     elif no_line = False:
         if cx >= 120:
-            right()?
-            GPIO.output("P8_10", GPIO.HIGH)
-            GPIO.output("P9_11", GPIO.LOW)
+            Falcon.TurnRight(min_speed,max_speed)
+            print("right")
         if cx < 120 and cx > 50:
-            forward()?
-            GPIO.output("P8_10", GPIO.LOW)
-            GPIO.output("P9_11", GPIO.LOW)
+            Falcon.Forward(max_speed)
+            print("forward")
         if cx <= 50:
-            left()?
-            GPIO.output("P8_10", GPIO.LOW)
-            GPIO.output("P9_11", GPIO.HIGH)
+            Falcon.TurnLeft(min_speed,max_speed)
+            print("left")
     else:
-        forward()
+        Falcon.Forward(max_speed)
         sleep(10)#enough time for line cut 15cm dist
 
     """
-
 if __name__ == '__main__':
+    print("Falcon is ON")
+    #Falcon.SpeakBegin()
+    #Falcon.FrontLight()
+
     cameraThread.start()
+    print("here we go")
     #time for camera to recieve frames
     sleep(3)
-    #distanceThread.start()
     colorThread.frame = cameraThread.frame 
     lineThread.frame = cameraThread.frame
+    #distanceThread.start()
     colorThread.start()
     lineThread.start()
     print("started")
