@@ -7,8 +7,12 @@ import numpy as np
 import cv2
 import time
 
-x1,y1=150,0
-x2,y2=500,300
+#using absolute resolution
+#x1,y1=150,0
+#x2,y2=500,300
+#using relative resolution
+x1,y1=0.3,0
+x2,y2=0.7,0.35
 
 class scanColor(Thread):
     def __init__(self):
@@ -28,7 +32,11 @@ class scanColor(Thread):
             time.sleep(1.1)
             try:
                 #getting smaller picture
-                imageFrame = self.frame[y1:y2,x1:x2]
+
+                y= self.frame.shape[0]
+                x= self.frame.shape[1]
+                imageFrame = self.frame[int(y*y1):int(y*y2), int(x*x1):int(x*x2)]
+                #imageFrame = self.frame[y1:y2,x1:x2]
                 #bgr to hsv
                 hsvFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2HSV)
             #getting avg color from frame, might consider using dominant color
