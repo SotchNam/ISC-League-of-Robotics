@@ -2,16 +2,16 @@
 from colorDetection.colorprint import scanColor
 #from lineDetection.using_cv_demo1 import line_follow
 from lineFollower import line_follow
-#from crossing import distance
+from crossing import distance
 from cameraInput import camera
 
 import cv2
 from threading import Thread, enumerate, main_thread
 from time import sleep 
 
-#import RPI.GPIO as GPIO
-#import Falcon
-#GPIO.setmode(gpio.BCM)
+import RPi.GPIO as GPIO
+import Falcon
+GPIO.setmode(GPIO.BCM)
 
 
 
@@ -19,7 +19,7 @@ from time import sleep
 cameraThread = camera()
 colorThread = scanColor()
 lineThread = line_follow()
-#distanceThread = distance()
+distanceThread = distance()
 
 """
 #-------#Setup Pinouts-------#
@@ -48,10 +48,10 @@ Falcon.Stop()
 #control the car
 def maiin():
 
-    """
     if dist < 5: #ultrasonic stop
         Falcon.Stop()
         print("stopped")
+        print(dist)
 
     elif colour == R or colour == G:
         Falcon.Stop()
@@ -61,7 +61,7 @@ def maiin():
         Falcon.Stop()
         sleep(2)
 
-    elif no_line = False:
+    elif no_line == False:
         if cx >= 120:
             Falcon.TurnRight(min_speed,max_speed)
             print("right")
@@ -72,13 +72,14 @@ def maiin():
             Falcon.TurnLeft(min_speed,max_speed)
             print("left")
     else:
-        Falcon.Forward(max_speed)
+        #Falcon.Forward(max_speed)
+        print("no line")
+        Falcon.Stop()
         sleep(10)#enough time for line cut 15cm dist
 
-    """
 if __name__ == '__main__':
     print("Falcon is ON")
-    #Falcon.SpeakBegin()
+    Falcon.SpeakBegin()
     #Falcon.FrontLight()
 
     cameraThread.start()
@@ -87,7 +88,7 @@ if __name__ == '__main__':
     sleep(3)
     colorThread.frame = cameraThread.frame 
     lineThread.frame = cameraThread.frame
-    #distanceThread.start()
+    distanceThread.start()
     colorThread.start()
     lineThread.start()
     print("started")
@@ -102,16 +103,16 @@ if __name__ == '__main__':
             color = colorThread.color
             no_line = lineThread.no_line
             cx = lineThread.cx
-            #dist = distanceThread.dist
+            dist = distanceThread.dist
 
             maiin()
-            #print(lineThread.frame)
+            #print(cameraThread.frame)
             #show camera view if needed
             cv2.imshow("test",cameraThread.frame)
             if (cv2.waitKey(1) & 0xFF == ord('q')):
                 break
             if lineThread.circle:
-                running = False
+                #running = False
                 print("found circle")
 
         except KeyboardInterrupt:
@@ -124,7 +125,7 @@ if __name__ == '__main__':
     #closing threads
     colorThread.stop()
     lineThread.stop()
-    #distanceThread.stop()
+    distanceThread.stop()
     cameraThread.stop()
     print("done")
 

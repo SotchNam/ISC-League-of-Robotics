@@ -2,15 +2,19 @@
 import RPi.GPIO as GPIO
 import time
 from threading import Thread
+# set GPIO Pins
+GPIO.setmode(GPIO.BCM)
 
+GPIO_TRIGGER = 8
+GPIO_ECHO = 25
 class distance(Thread):
     def __init__(self):
         # GPIO Mode (BOARD / BCM)
         GPIO.setmode(GPIO.BCM)
 
         # set GPIO Pins
-        GPIO_TRIGGER = 18
-        GPIO_ECHO = 24
+        GPIO_TRIGGER = 8
+        GPIO_ECHO = 25
 
         # set GPIO direction (IN / OUT)
         GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
@@ -28,7 +32,7 @@ class distance(Thread):
         self.on = True
         while self.on:
             #delay to improve threading, removes stress from cpu
-            time.delay(0.1)
+            time.sleep(0.1)
             # set Trigger to HIGH
             GPIO.output(GPIO_TRIGGER, True)
             # set Trigger after 0.01ms to LOW
