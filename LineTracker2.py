@@ -45,80 +45,40 @@ print("FALCON is ON,,")
 Falcon.FrontLight()
  
 while(True):
-
     # Capture the frames
-
     ret, frame = cap.read()
-
     # Crop the image
-
     crop_img = frame[60:120, 0:160]
-
-
     # Convert to grayscale
-
     gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
-
-
     # Gaussian blur
-
     blur = cv2.GaussianBlur(gray,(5,5),0)
-
- 
-
     # Color thresholding
-
     ret,thresh = cv2.threshold(blur,60,255,cv2.THRESH_BINARY_INV)
-
-
     # Find the contours of the frame
-
     contours,hierarchy = cv2.findContours(thresh.copy(), 1, cv2.CHAIN_APPROX_NONE)
-
-
     # Find the biggest contour (if detected)
-
     if len(contours) > 0:
-
         c = max(contours, key=cv2.contourArea)
-
         M = cv2.moments(c)
+        if M['m00'] != 0:  # Check if contour area is non-zero
+            cx = int(M['m10']/M['m00'])
+            cy = int(M['m01']/M['m00'])
+            cv2.line(crop_img,(cx,0),(cx,720),(255,0,0),1)
+            cv2.line(crop_img,(0,cy),(1280,cy),(255,0,0),1)
+            cv2.drawContours(crop_img, contours, -1, (0,255,0), 1)
 
+            if cx >= 120:
+                print("Turn Right")
+                Falcon.TurnRight(min_speed,max_speed)
 
-        cx = int(M['m10']/M['m00'])
+            if cx < 120 and cx > 50:
+                print("On Track!")
+                Falcon.Forward(max_speed)
 
-        cy = int(M['m01']/M['m00'])
-
- 
-
-        cv2.line(crop_img,(cx,0),(cx,720),(255,0,0),1)
-
-        cv2.line(crop_img,(0,cy),(1280,cy),(255,0,0),1)
-
- 
-
-        cv2.drawContours(crop_img, contours, -1, (0,255,0), 1)
-
- 
-
-        if cx >= 120:
-
-            print("Turn Right")
-            Falcon.TurnRight(min_speed,max_speed)
-
- 
-
-        if cx < 120 and cx > 50:
-
-            print("On Track!")
-            Falcon.Forward(max_speed)
-
- 
-
-        if cx <= 50:
-
-            print("Turn Left")
-            Falcon.TurnLeft(min_speed,max_speed)
+            if cx <= 50:
+                print("Turn Left")
+                Falcon.TurnLeft(min_speed,max_speed)
 
  
 
