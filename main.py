@@ -56,10 +56,14 @@ def maiin():
     elif colour == R or colour == G:
         Falcon.Stop()
         sleep(5)
+        Falcon.Forward(max_speed)
+        sleep(1) # time to skip the color
 
     elif colour == B:
         Falcon.Stop()
         sleep(2)
+        Falcon.Forward(max_speed)
+        sleep(1) # time to skip the color
 
     elif no_line == False:
         if cx >= 120:
@@ -74,12 +78,12 @@ def maiin():
     else:
         #Falcon.Forward(max_speed)
         print("no line")
-        Falcon.Stop()
-        sleep(10)#enough time for line cut 15cm dist
+        #Falcon.Stop() # continue previous action
+        sleep(2) # enough time for line cut 15cm dist
 
 if __name__ == '__main__':
     print("Falcon is ON")
-    Falcon.SpeakBegin()
+    #Falcon.SpeakBegin()
     #Falcon.FrontLight()
 
     cameraThread.start()
