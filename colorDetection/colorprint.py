@@ -79,11 +79,12 @@ class scanColor(Thread):
 
 if __name__ == '__main__':
     webcam = cv2.VideoCapture(0)
+    _, imageFrame = webcam.read()
+    colorThread = scanColor()
+    colorThread.frame = imageFrame
+    colorThread.start()
     while(True):
-        _, imageFrame = webcam.read()
-        colorThread = scanColor()
         colorThread.frame = imageFrame
-        colorThread.start()
         print(colorThread.color)
         if cv2.waitKey(1) & 0xFF == ord('q'):
                 colorThread.stop()
