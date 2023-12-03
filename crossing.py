@@ -71,3 +71,4 @@ if __name__ == '__main__':
 #         # Reset by pressing CTRL + C
      except KeyboardInterrupt:
          print("Measurement stopped by User")
+         distanceThread.stop()

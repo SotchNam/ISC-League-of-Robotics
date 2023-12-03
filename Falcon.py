@@ -3,8 +3,8 @@ import time
 import tinyik
 import numpy as np
 import RPi.GPIO as gpio
-import pyttsx3 # Text to Speech Library
-engine = pyttsx3.init() # object creation
+#import pyttsx3 # Text to Speech Library
+#engine = pyttsx3.init() # object creation
 
 ### Import the PCA9685 module:
 import Adafruit_PCA9685
@@ -63,20 +63,20 @@ pwm2=gpio.PWM(en2,100)
 
 #Speech Variables:
 """ RATE"""
-rate = engine.getProperty('rate')   # getting details of current speaking rate
-print (rate)                        #printing current voice rate
-engine.setProperty('rate', 150)     # setting up new voice rate
-
-
-"""VOLUME"""
-volume = engine.getProperty('volume')   #getting to know current volume level (min=0 and max=1)
-print (volume)                          #printing current volume level
-engine.setProperty('volume',10.0)    # setting up volume level  between 0 and 1
-
-"""VOICE"""
-voices = engine.getProperty('voices')       #getting details of current voice
-#engine.setProperty('voice', voices[0].id)  #changing index, changes voices. o for male
-engine.setProperty('voice', voices[2].id)   #changing index, changes voices. 1 for female
+#rate = engine.getProperty('rate')   # getting details of current speaking rate
+# print (rate)                        #printing current voice rate
+# engine.setProperty('rate', 150)     # setting up new voice rate
+#
+#
+# """VOLUME"""
+# volume = engine.getProperty('volume')   #getting to know current volume level (min=0 and max=1)
+# print (volume)                          #printing current volume level
+# engine.setProperty('volume',10.0)    # setting up volume level  between 0 and 1
+#
+# """VOICE"""
+# voices = engine.getProperty('voices')       #getting details of current voice
+# #engine.setProperty('voice', voices[0].id)  #changing index, changes voices. o for male
+# engine.setProperty('voice', voices[2].id)   #changing index, changes voices. 1 for female
 
 Falcon = tinyik.Actuator(
     [
@@ -410,48 +410,23 @@ def PickDone():
     print("Channel5")
     servo5.angle = 20
 
-def SpeakBegin():
-    engine.say("Step Back.. Falcon is detecting!")
-    engine.runAndWait()
-    engine.stop()
-
-def SpeakColor():
-    engine.say("The Color is RED")
-    engine.runAndWait()
-    engine.stop()
-    
-def Speak(text):
-    str(text)
-    engine.say(text)
-    engine.runAndWait()
-    engine.stop()
-def SpeakSave(text):
-    """Saving Voice to a file"""
-    str(text)
-    engine.save_to_file( text , 'Saved.mp3')
-    engine.runAndWait()
-
-
-
-
-    
-
-
-
-
-
-
-        
-
-
-
-        
-
-
-        
-
-
-      
-
-
-
+# def SpeakBegin():
+#     engine.say("Step Back.. Falcon is detecting!")
+#     engine.runAndWait()
+#     engine.stop()
+#
+# def SpeakColor():
+#     engine.say("The Color is RED")
+#     engine.runAndWait()
+#     engine.stop()
+#     
+# def Speak(text):
+#     str(text)
+#     engine.say(text)
+#     engine.runAndWait()
+#     engine.stop()
+# def SpeakSave(text):
+#     """Saving Voice to a file"""
+#     str(text)
+#     engine.save_to_file( text , 'Saved.mp3')
+#     engine.runAndWait()

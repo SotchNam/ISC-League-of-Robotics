@@ -41,7 +41,7 @@ max_speed= 70
 min_speed= 64
 
 print("FALCON is ON,,")
-Falcon.SpeakBegin()
+#Falcon.SpeakBegin()
 Falcon.FrontLight()
  
 while(True):
