@@ -17,6 +17,7 @@ class camera(Thread):
         self.on = True
         while self.on:
             _, self.frame = self.webcam.read()
+            self.frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
 
     def stop(self):
         self.on = False

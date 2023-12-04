@@ -20,6 +20,7 @@ class scanColor(Thread):
         self.frame= None
         self.on = False
         self.avgColor = None
+        self.croppedImage = None
         super().__init__()
 
     def start(self):
@@ -45,7 +46,7 @@ class scanColor(Thread):
         self.on = True
         while self.on:
             #delay to improve threading, removes stress from cpu
-            time.sleep(1.1)
+            time.sleep(0.1)
             try:
                 #getting smaller picture
                 y= self.frame.shape[0]
@@ -58,6 +59,8 @@ class scanColor(Thread):
                 avg_color_per_row = np.average(hsvFrame, axis=0) 
                 avg_color = np.average(avg_color_per_row, axis=0)
                 self.avgColor = avg_color
+                self.croppedImage = imageFrame
+                print(avg_color)
 
                 #test the avg color with each color range
                 #print(self.frame)
@@ -86,10 +89,13 @@ if __name__ == '__main__':
         colorThread = scanColor()
         colorThread.frame = imageFrame
         colorThread.start()
+        time.sleep(3)
         while(True):
             _, imageFrame = webcam.read()
+            imageFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2RGB)
             colorThread.frame = imageFrame
-            cv2.imshow("Frame", imageFrame) 
+            cv2.imshow("Frame", colorThread.croppedImage) 
+            cv2.imshow("test", imageFrame)
             print(colorThread.color)
             print(colorThread.avgColor)
 

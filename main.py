@@ -53,10 +53,18 @@ def maiin():
         print("stopped")
         print(dist)
 
-    elif colour == R or colour == G:
+    elif colour == G:
         Falcon.Stop()
         sleep(5)
         Falcon.Forward(max_speed)
+        sleep(1) # time to skip the color
+
+    elif colour == R:
+        Falcon.Stop()
+        Falcon.openDoor()
+        sleep(5)
+        Falcon.Forward(max_speed)
+        Falcon.closeDoor()
         sleep(1) # time to skip the color
 
     elif colour == B:
