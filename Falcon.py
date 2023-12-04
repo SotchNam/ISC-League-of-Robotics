@@ -10,31 +10,31 @@ import RPi.GPIO as gpio
 import Adafruit_PCA9685
 from board import SCL, SDA
 import busio
-from adafruit_motor import servo
-from adafruit_pca9685 import PCA9685
+#from adafruit_motor import servo
+#from adafruit_pca9685 import PCA9685
 
 i2c = busio.I2C(SCL, SDA) # Initialise the PCA9685 using the default address (0x40).
-pwm = Adafruit_PCA9685.PCA9685() # Create a simple PCA9685 class instance.
-pca = PCA9685(i2c)
-pca.frequency = 60
+#pwm = Adafruit_PCA9685.PCA9685() # Create a simple PCA9685 class instance.
+#pca = PCA9685(i2c)
+#pca.frequency = 60
 
 #Servo Channels:
-servo0= servo.Servo(pca.channels[0])
-servo1= servo.Servo(pca.channels[1])
-servo2= servo.Servo(pca.channels[2])
-servo3= servo.Servo(pca.channels[3])
-servo4= servo.Servo(pca.channels[4])
-servo5= servo.Servo(pca.channels[5])
+##servo0= servo.Servo(pca.channels[0])
+##servo1= servo.Servo(pca.channels[1])
+##servo2= servo.Servo(pca.channels[2])
+##servo3= servo.Servo(pca.channels[3])
+##servo4= servo.Servo(pca.channels[4])
+##servo5= servo.Servo(pca.channels[5])
 
 #LED Channels:
-LedF= servo.Servo(pca.channels[8])
-LedR= servo.Servo(pca.channels[9])
-LedL= servo.Servo(pca.channels[10])
-LedB= servo.Servo(pca.channels[11])
+##LedF= servo.Servo(pca.channels[8])
+##LedR= servo.Servo(pca.channels[9])
+##LedL= servo.Servo(pca.channels[10])
+##LedB= servo.Servo(pca.channels[11])
 #Setting Channels:
-Set0= servo.Servo(pca.channels[13])
-Set90= servo.Servo(pca.channels[14])
-Set180= servo.Servo(pca.channels[15])
+##Set0= servo.Servo(pca.channels[13])
+##Set90= servo.Servo(pca.channels[14])
+##Set180= servo.Servo(pca.channels[15])
 
 ###Variables:
 #time:
@@ -58,8 +58,8 @@ gpio.setup(in3, gpio.OUT)
 gpio.setup(in4, gpio.OUT)
 gpio.setup(en1,gpio.OUT)
 gpio.setup(en2,gpio.OUT)
-pwm1=gpio.PWM(en1,100)
-pwm2=gpio.PWM(en2,100)
+#pwm1=gpio.PWM(en1,100)
+#pwm2=gpio.PWM(en2,100)
 
 #Speech Variables:
 """ RATE"""
@@ -100,72 +100,72 @@ def IK(x,y,z):
     
 def ArmIk(a,b,c,d,e,f):
     # joint 0:
-    servo0.angle =a
+    ##servo0.angle =a
     #time.sleep(tsll)
     # joint 4:
-    servo4.angle =e
+    ##servo4.angle =e
     #time.sleep(tsll)
     # joint 2:
-    servo2.angle =c
+    ##servo2.angle =c
     time.sleep(tsh)
     # joint 1:
-    servo1.angle =b
+    ##servo1.angle =b
     #time.sleep(tsll)
     # joint 3:
-    servo3.angle =d
+    ##servo3.angle =d
     # joint 5:
-    servo5.angle =f
+    #servo5.angle =f
     
 def ArmCameraStart():
     print ("CameraOne")    
     # joint 0:
     print("Channel0")
-    servo0.angle =75
+    #servo0.angle =75
     time.sleep(tsll)
     # joint 1:
     print("Channel1")
-    servo1.angle =120
+    #servo1.angle =120
     time.sleep(tsll)
     # joint 2:
     print("Channel2")
-    servo2.angle =180
+    #servo2.angle =180
     time.sleep(tsl)
     # joint 3:
     print("Channel3")
-    servo3.angle =90
+    #servo3.angle =90
     # joint 4:
     print("Channel4")
-    servo4.angle =20
+    #servo4.angle =20
     time.sleep(tsll)
     # joint 5:
     print("Channel5")
-    servo5.angle =0
+    #servo5.angle =0
     
     
 def Zero():
     print ("CameraOne")    
     # joint 0:
     print("Channel0")
-    servo0.angle =80
+    #servo0.angle =80
     time.sleep(tsll)
     # joint 1:
     print("Channel1")
-    servo1.angle =46-3
+    #servo1.angle =46-3
     time.sleep(tsll)
     # joint 2:
     print("Channel2")
-    servo2.angle =30
+    #servo2.angle =30
     time.sleep(tsl)
     # joint 3:
     print("Channel3")
-    servo3.angle =2+90
+    #servo3.angle =2+90
     # joint 4:
     print("Channel4")
-    servo4.angle =35+90
+    #servo4.angle =35+90
     time.sleep(tsll)
     # joint 5:
     print("Channel5")
-    servo5.angle =40
+    #servo5.angle =40
     
 def Forward(speed):
     gpio.setmode(gpio.BCM)
@@ -175,8 +175,8 @@ def Forward(speed):
     gpio.setup(in4, gpio.OUT)
     gpio.setup(en1,gpio.OUT)
     gpio.setup(en2,gpio.OUT)
-    #pwm1=gpio.PWM(en1,100)
-    #pwm2=gpio.PWM(en2,100)
+    pwm1=gpio.PWM(en1,100)
+    pwm2=gpio.PWM(en2,100)
     pwm1.start(speed)
     pwm2.start(speed)
 
@@ -195,8 +195,8 @@ def Backward(speed):
     gpio.setup(in4, gpio.OUT)
     gpio.setup(en1,gpio.OUT)
     gpio.setup(en2,gpio.OUT)
-    #pwm1=gpio.PWM(en1,100)
-    #pwm2=gpio.PWM(en2,100)
+    pwm1=gpio.PWM(en1,00)
+    pwm2=gpio.PWM(en2,00)
     pwm1.start(speed)
     pwm2.start(speed)
 
@@ -215,8 +215,8 @@ def TurnRight(speed,max_speed):
     gpio.setup(in4, gpio.OUT)
     gpio.setup(en1,gpio.OUT)
     gpio.setup(en2,gpio.OUT)
-    #pwm1=gpio.PWM(en1,100)
-    #pwm2=gpio.PWM(en2,100)
+    pwm1=gpio.PWM(en1,100)
+    pwm2=gpio.PWM(en2,100)
     pwm1.start(speed)
     pwm2.start(max_speed)
 
@@ -235,8 +235,8 @@ def TurnLeft(speed,max_speed):
     gpio.setup(in4, gpio.OUT)
     gpio.setup(en1,gpio.OUT)
     gpio.setup(en2,gpio.OUT)
-    #pwm1=gpio.PWM(en1,100)
-    #pwm2=gpio.PWM(en2,100)
+    pwm1=gpio.PWM(en1,100)
+    pwm2=gpio.PWM(en2,100)
     pwm1.start(max_speed)
     pwm2.start(speed)
 
@@ -266,37 +266,37 @@ def Cleanup():
 #Lights:
 def FrontLight():
     print ("FRONT LED")    
-    pwm.set_pwm(8, 6000, 1500)
-    pwm.set_pwm(9, 0, 0)
-    pwm.set_pwm(10, 0, 0)
-    pwm.set_pwm(11, 0, 0)
+    #pwm.set_pwm(8, 6000, 1500)
+    #pwm.set_pwm(9, 0, 0)
+    #pwm.set_pwm(10, 0, 0)
+    #pwm.set_pwm(11, 0, 0)
     
 def BackLight():
     print ("STOP")    
-    pwm.set_pwm(8, 0, 0)
-    pwm.set_pwm(9, 0, 0)
-    pwm.set_pwm(10, 0, 0)
-    pwm.set_pwm(11, 6000, 1500)
+    #pwm.set_pwm(8, 0, 0)
+    #pwm.set_pwm(9, 0, 0)
+    #pwm.set_pwm(10, 0, 0)
+    #pwm.set_pwm(11, 6000, 1500)
 
 def RightLight():   
     print ("RIGHT LED")    
-    pwm.set_pwm(8, 0, 0)
-    pwm.set_pwm(9, 6000, 1500)
+    #pwm.set_pwm(8, 0, 0)
+    #pwm.set_pwm(9, 6000, 1500)
     time.sleep(0.4)
-    pwm.set_pwm(9, 0, 0)
+    #pwm.set_pwm(9, 0, 0)
     time.sleep(0.4)
-    pwm.set_pwm(10, 0, 0)
-    pwm.set_pwm(11, 0, 0)
-    
+    #pwm.set_pwm(10, 0, 0)
+    #pwm.set_pwm(11, 0, 0)
+    #
 def LeftLight():   
     print ("LEFT LED") 
-    pwm.set_pwm(8, 0, 0)
-    pwm.set_pwm(9, 0, 0)
-    pwm.set_pwm(10, 6000, 1500)
+    #pwm.set_pwm(8, 0, 0)
+    #pwm.set_pwm(9, 0, 0)
+    #pwm.set_pwm(10, 6000, 1500)
     time.sleep(0.4)
-    pwm.set_pwm(10, 0, 0)
+    #pwm.set_pwm(10, 0, 0)
     time.sleep(0.4)
-    pwm.set_pwm(11, 0, 0)
+    #pwm.set_pwm(11, 0, 0)
         
 def Homing():
     ArmHoming()
@@ -309,29 +309,29 @@ def ArmHoming():
     print ("HOMING")    
     # joint 0:
     print("Channel0")
-    servo0.angle =75
+    #servo0.angle =75
     time.sleep(tsll)
     # joint 2:
     print("Channel2")
-    servo2.angle =120
+    #servo2.angle =120
     time.sleep(tsl)
     # joint 1:
     print("Channel1")
-    servo1.angle =90
+    #servo1.angle =90
     time.sleep(tsll)
     # joint 3:
     print("Channel3")
-    servo3.angle =90
+    #servo3.angle =90
     time.sleep(tsll)
     # joint 4:
     print("Channel4")
-    servo4.angle =90
+    #servo4.angle =90
     time.sleep(tsll)
     # joint 5:
     print("Channel5")   
-    servo5.angle =0
+    #servo5.angle =0
     time.sleep(tsll)
-    servo5.angle =60
+    #servo5.angle =60
     time.sleep(tsll)
     
 
@@ -340,75 +340,75 @@ def ArmCameraDone():
     print ("CameraTwo")
     # joint 0:
     print("Channel0")
-    servo0.angle=75
+    #servo0.angle=75
     time.sleep(tsl)
     # joint 4:
     print("Channel4")
-    servo4.angle =130
+    #servo4.angle =130
     # joint 2:
     print("Channel2")
-    servo2.angle =90
+    #servo2.angle =90
     time.sleep(2)
     # joint 1:
     print("Channel1")
-    servo1.angle =50
+    #servo1.angle =50
     time.sleep(tsh)
     # joint 3:
     print("Channel3")
-    servo3.angle =90
+    #servo3.angle =90
     time.sleep(tsh)
     # joint 5:
     print("Channel5")
-    servo5.angle = 90
+    #servo5.angle = 90
       
 def PickStart():
     print ("I am PICKING")    
     # joint 4:
     print("Channel4")
-    servo4.angle =130
+    #servo4.angle =130
     # joint 0:
     print("Channel0")
-    servo0.angle=75
+    #servo0.angle=75
     time.sleep(tsh)
     # joint 2:
     print("Channel2")
-    servo2.angle =90
+    #servo2.angle =90
     time.sleep(tsh)
     # joint 1:
     print("Channel1")
-    servo1.angle =7
+    #servo1.angle =7
     time.sleep(tsh)
     # joint 3:
     print("Channel3")
-    servo3.angle =90
+    #servo3.angle =90
     # joint 5:
     print("Channel5")
-    servo5.angle = 20
+    #servo5.angle = 20
     
 def PickDone():
     print ("PICKED!") 
      # joint 4:
     print("Channel4")
-    servo4.angle =140
+    #servo4.angle =140
     # joint 0:
     print("Channel0")
-    servo0.angle=75
+    #servo0.angle=75
     time.sleep(tsh)
     # joint 2:
     print("Channel2")
-    servo2.angle =90
+    #servo2.angle =90
     time.sleep(tsh)
     # joint 1:
     print("Channel1")
-    servo1.angle =90
+    #servo1.angle =90
     time.sleep(tsh)
     # joint 3:
     print("Channel3")
-    servo3.angle =90
+    #servo3.angle =90
     time.sleep(tsh)
     # joint 5:
     print("Channel5")
-    servo5.angle = 20
+    #servo5.angle = 20
 
 # def SpeakBegin():
 #     engine.say("Step Back.. Falcon is detecting!")
@@ -430,3 +430,20 @@ def PickDone():
 #     str(text)
 #     engine.save_to_file( text , 'Saved.mp3')
 #     engine.runAndWait()
+
+if __name__ == "__main__":
+    gpio.setmode(gpio.BCM)
+    gpio.setup(in1, gpio.OUT)
+    gpio.setup(in2, gpio.OUT)
+    gpio.setup(in3, gpio.OUT)
+    gpio.setup(in4, gpio.OUT)
+    gpio.setup(en1,gpio.OUT)
+    gpio.setup(en2,gpio.OUT)
+    gpio.setup(26,gpio.OUT)
+    try:
+        while True:
+            Forward(100);
+            #gpio.output(26, False)
+    except KeyboardInterrupt:
+        Cleanup()
+

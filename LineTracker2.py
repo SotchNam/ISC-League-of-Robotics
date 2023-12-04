@@ -61,6 +61,7 @@ while(True):
     if len(contours) > 0:
         c = max(contours, key=cv2.contourArea)
         M = cv2.moments(c)
+        print(M['m00'])
         if M['m00'] != 0:  # Check if contour area is non-zero
             cx = int(M['m10']/M['m00'])
             cy = int(M['m01']/M['m00'])
@@ -80,6 +81,7 @@ while(True):
                 print("Turn Left")
                 Falcon.TurnLeft(min_speed,max_speed)
 
+    cv2.imshow('frame',crop_img)
  
 
 else:
@@ -88,7 +90,6 @@ else:
     self.no_line = True
 #Display the resulting frame
 
-cv2.imshow('frame',crop_img)
 
 if cv2.waitKey(1) & 0xFF == ord('q'):
     Falcon.Stop()

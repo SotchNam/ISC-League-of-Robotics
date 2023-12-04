@@ -19,6 +19,7 @@ class scanColor(Thread):
         self.color= None
         self.frame= None
         self.on = False
+        self.avgColor = None
         super().__init__()
 
     def start(self):
@@ -56,6 +57,7 @@ class scanColor(Thread):
                 #getting avg color from frame, might consider using dominant color
                 avg_color_per_row = np.average(hsvFrame, axis=0) 
                 avg_color = np.average(avg_color_per_row, axis=0)
+                self.avgColor = avg_color
 
                 #test the avg color with each color range
                 #print(self.frame)
@@ -67,6 +69,8 @@ class scanColor(Thread):
 
                 elif (np.less_equal(avg_color,blue_upper)).all() and (np.greater_equal(avg_color,blue_lower)).all():
                         self.color = 'B'
+                else:
+                        self.color = None
 
             except TypeError:
                 print("Color: No frame")
@@ -76,18 +80,26 @@ class scanColor(Thread):
 
 
 if __name__ == '__main__':
-    webcam = cv2.VideoCapture(0)
-    _, imageFrame = webcam.read()
-    colorThread = scanColor()
-    colorThread.frame = imageFrame
-    colorThread.start()
-    while(True):
+    try:
+        webcam = cv2.VideoCapture(0)
         _, imageFrame = webcam.read()
+        colorThread = scanColor()
         colorThread.frame = imageFrame
-        cv2.imshow("Frame", imageFrame) 
-        print(colorThread.color)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-                colorThread.stop()
-                webcam.release()
-                cv2.destroyAllWindows()
-                break
+        colorThread.start()
+        while(True):
+            _, imageFrame = webcam.read()
+            colorThread.frame = imageFrame
+            cv2.imshow("Frame", imageFrame) 
+            print(colorThread.color)
+            print(colorThread.avgColor)
+
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                    colorThread.stop()
+                    webcam.release()
+                    cv2.destroyAllWindows()
+                    break
+    except KeyboardInterrupt:
+        colorThread.stop()
+        webcam.release()
+        cv2.destroyAllWindows()
+
