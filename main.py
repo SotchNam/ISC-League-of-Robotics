@@ -21,9 +21,8 @@ colorThread = scanColor()
 lineThread = line_follow()
 distanceThread = distance()
 
-"""
 #-------#Setup Pinouts-------#
-max_speed= 70
+max_speed= 70 # from 100
 min_speed= 64
 
 en1=20
@@ -43,7 +42,12 @@ gpio.setup(en2,gpio.OUT)
 #p2 = gpio.PWM(en2, 100)
 Falcon.Stop()
 #----------------------------#
-"""
+imageWidth = lineThread.frame.shape[1] # = 320
+leftMostBound= imageWidth*0.3
+leftBound = imageWidth*0.4
+center = imageWidth / 2 # 80
+rightBound = imageWidth*0.6
+rightMostBound= imageWidth*0.7
 
 #control the car
 def maiin():
@@ -74,15 +78,21 @@ def maiin():
         sleep(1) # time to skip the color
 
     elif no_line == False:
-        if cx >= 120:
-            Falcon.TurnRight(min_speed,max_speed)
-            print("right")
-        if cx < 120 and cx > 50:
+        if cx < leftMostBound:
+            Falcon.TurnLeft(0,max_speed)
+            print("left more")
+        elif cx <= leftBound and cx >= leftMostBound:
+            Falcon.Forward(max_speed,min_speed) # forward(min,max)
+            print("left")
+        elif cx <= rightBound and cx >= leftBound:
             Falcon.Forward(max_speed)
             print("forward")
-        if cx <= 50:
-            Falcon.TurnLeft(min_speed,max_speed)
-            print("left")
+        elif cx >= rightBound and cx <= rightMostBound:
+            Falcon.Forward(min_speed,max_speed) # forward(min,max)
+            print("right")
+        elif cx >= rightMostBound:
+            Falcon.TurnRight(max_speed,0)
+            print("right more")
     else:
         #Falcon.Forward(max_speed)
         print("no line")

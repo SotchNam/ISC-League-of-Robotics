@@ -15,9 +15,12 @@ class camera(Thread):
 
     def run(self):
         self.on = True
+        self.webcam.set(3, 320)
+        self.webcam.set(4, 240)
+        self.webcam.set(cv2.CAP_PROP_AUTO_EXPOSURE,0)
+        self.webcam.set(cv2.CAP_PROP_AUTO_WB,0)
         while self.on:
-            _, self.frame = self.webcam.read()
-            self.frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
+            _, self.frame = cv2.cvtColor(self.webcam.read()[1], cv2.COLOR_BGR2RGB)
 
     def stop(self):
         self.on = False

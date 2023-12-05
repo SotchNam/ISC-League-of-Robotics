@@ -167,7 +167,9 @@ def Zero():
     print("Channel5")
     #servo5.angle =40
     
-def Forward(speed):
+def Forward(speed1, speed2=None):
+    if speed2 is None:
+        speed2 = speed1
     gpio.setmode(gpio.BCM)
     gpio.setup(in1, gpio.OUT)
     gpio.setup(in2, gpio.OUT)
@@ -177,8 +179,8 @@ def Forward(speed):
     gpio.setup(en2,gpio.OUT)
     pwm1=gpio.PWM(en1,100)
     pwm2=gpio.PWM(en2,100)
-    pwm1.start(speed)
-    pwm2.start(speed)
+    pwm1.start(speed1) # right
+    pwm2.start(speed2) # left
 
     gpio.output(in1, False)
     gpio.output(in2, True)
