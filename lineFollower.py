@@ -1,3 +1,4 @@
+import time
 import numpy as np
 import cv2
 from threading import Thread
@@ -10,6 +11,7 @@ class line_follow(Thread):
         self.frame= None
         self.on = False
         self.circle= False
+        self.croppedImage = None
         super().__init__()
 
     def start (self):
@@ -27,13 +29,13 @@ class line_follow(Thread):
             try:
                 # Crop the image
                 #crop_img = self.frame[60:120, 0:160]
-                crop_img = self.frame[120:240, 0:320]
+                self.croppedImage = self.frame[120:240, 100:220]
                 # Convert to grayscale
-                gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
+                gray = cv2.cvtColor(self.croppedImage, cv2.COLOR_BGR2GRAY)
                 # Gaussian blur
                 blur = cv2.GaussianBlur(gray, (5, 5), 0)
                 # Color thresholding
-                ret, thresh1 = cv2.threshold(blur, 40, 255, cv2.THRESH_BINARY_INV)
+                ret, thresh1 = cv2.threshold(blur, 30, 255, cv2.THRESH_BINARY_INV)
                 # Erode and dilate to remove accidental line detections
                 mask = cv2.erode(thresh1, None, iterations=2)
                 mask = cv2.dilate(mask, None, iterations=2)
@@ -69,3 +71,34 @@ class line_follow(Thread):
 
     def stop(self):
         self.on = False
+
+
+if __name__ == '__main__':
+    try:
+        webcam = cv2.VideoCapture(0)
+        webcam.set(3, 320)
+        webcam.set(4, 240)
+        webcam.set(cv2.CAP_PROP_AUTO_EXPOSURE,0)
+        webcam.set(cv2.CAP_PROP_AUTO_WB,0)
+        _, imageFrame = webcam.read()
+        lineThread = line_follow()
+        lineThread.frame = imageFrame
+        lineThread.start()
+        time.sleep(3)
+        while(True):
+            _, imageFrame = webcam.read()
+            #imageFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2RGB)
+            lineThread.frame = imageFrame
+            cv2.imshow("Frame", lineThread.croppedImage) 
+            cv2.imshow("test", imageFrame)
+            print(lineThread.cx)
+
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                    lineThread.stop()
+                    webcam.release()
+                    cv2.destroyAllWindows()
+                    break
+    except KeyboardInterrupt:
+        lineThread.stop()
+        webcam.release()
+        cv2.destroyAllWindows()

@@ -12,7 +12,7 @@ import time
 #x2,y2=500,300
 #using relative resolution
 x1,y1=0.3,0
-x2,y2=0.7,0.35
+x2,y2=0.4,0.25
 
 class scanColor(Thread):
     def __init__(self):
@@ -85,6 +85,10 @@ class scanColor(Thread):
 if __name__ == '__main__':
     try:
         webcam = cv2.VideoCapture(0)
+        webcam.set(3, 320)
+        webcam.set(4, 240)
+        webcam.set(cv2.CAP_PROP_AUTO_EXPOSURE,0)
+        webcam.set(cv2.CAP_PROP_AUTO_WB,0)
         _, imageFrame = webcam.read()
         colorThread = scanColor()
         colorThread.frame = imageFrame
@@ -92,7 +96,7 @@ if __name__ == '__main__':
         time.sleep(3)
         while(True):
             _, imageFrame = webcam.read()
-            imageFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2RGB)
+            #imageFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2RGB)
             colorThread.frame = imageFrame
             cv2.imshow("Frame", colorThread.croppedImage) 
             cv2.imshow("test", imageFrame)
