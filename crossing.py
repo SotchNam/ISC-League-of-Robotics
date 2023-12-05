@@ -9,7 +9,15 @@ GPIO_TRIGGER = 8
 GPIO_ECHO = 25
 class distance(Thread):
     def __init__(self):
-        # GPIO Mode (BOARD / BCM)
+        self.dist = 0
+        self.on= False
+        super().__init__()
+
+    def start(self):
+        Thread(target = self.run,args=()).start()
+        return self
+
+    def run(self):
         GPIO.setmode(GPIO.BCM)
 
         # set GPIO Pins
@@ -20,15 +28,6 @@ class distance(Thread):
         GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
         GPIO.setup(GPIO_ECHO, GPIO.IN)
 
-        self.dist = 0
-        self.on= False
-        super().__init__()
-
-    def start(self):
-        Thread(target = self.run,args=()).start()
-        return self
-
-    def run(self):
         self.on = True
         while self.on:
             #delay to improve threading, removes stress from cpu
