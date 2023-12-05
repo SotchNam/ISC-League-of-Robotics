@@ -42,7 +42,7 @@ gpio.setup(en2,gpio.OUT)
 #p2 = gpio.PWM(en2, 100)
 Falcon.Stop()
 #----------------------------#
-imageWidth = lineThread.frame.shape[1] # = 320
+imageWidth = 320 #lineThread.frame.shape[1] # = 320
 leftMostBound= imageWidth*0.3
 leftBound = imageWidth*0.4
 center = imageWidth / 2 # 80

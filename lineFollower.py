@@ -29,7 +29,7 @@ class line_follow(Thread):
             try:
                 # Crop the image
                 #crop_img = self.frame[60:120, 0:160]
-                self.croppedImage = self.frame[120:240, 100:220]
+                self.croppedImage = self.frame[120:240, 0:320]
                 # Convert to grayscale
                 gray = cv2.cvtColor(self.croppedImage, cv2.COLOR_BGR2GRAY)
                 # Gaussian blur
