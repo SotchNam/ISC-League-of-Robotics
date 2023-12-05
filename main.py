@@ -9,9 +9,9 @@ import cv2
 from threading import Thread, enumerate, main_thread
 from time import sleep 
 
-import RPi.GPIO as GPIO
+import RPi.GPIO as gpio
 import Falcon
-GPIO.setmode(GPIO.BCM)
+gpio.setmode(gpio.BCM)
 
 
 
