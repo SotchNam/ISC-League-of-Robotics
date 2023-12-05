@@ -27,13 +27,13 @@ class line_follow(Thread):
             try:
                 # Crop the image
                 #crop_img = self.frame[60:120, 0:160]
-                crop_img= self.frame
+                crop_img = self.frame[120:240, 0:320]
                 # Convert to grayscale
                 gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
                 # Gaussian blur
                 blur = cv2.GaussianBlur(gray, (5, 5), 0)
                 # Color thresholding
-                ret, thresh1 = cv2.threshold(blur, 60, 255, cv2.THRESH_BINARY_INV)
+                ret, thresh1 = cv2.threshold(blur, 40, 255, cv2.THRESH_BINARY_INV)
                 # Erode and dilate to remove accidental line detections
                 mask = cv2.erode(thresh1, None, iterations=2)
                 mask = cv2.dilate(mask, None, iterations=2)
