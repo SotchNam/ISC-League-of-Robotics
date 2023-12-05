@@ -433,7 +433,7 @@ def PickDone():
 #     engine.save_to_file( text , 'Saved.mp3')
 #     engine.runAndWait()
 
-doorPin = 1111 # change to the pin please
+doorPin = 26 # change to the pin please
 gpio.setup(doorPin, gpio.OUT)
 def openDoor():
     gpio.output(doorPin,True)
