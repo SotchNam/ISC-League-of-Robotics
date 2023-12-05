@@ -20,7 +20,7 @@ class camera(Thread):
         self.webcam.set(cv2.CAP_PROP_AUTO_EXPOSURE,0)
         self.webcam.set(cv2.CAP_PROP_AUTO_WB,0)
         while self.on:
-            _, self.frame = cv2.cvtColor(self.webcam.read()[1], cv2.COLOR_BGR2RGB)
+            self.frame = self.webcam.read()[1]
 
     def stop(self):
         self.on = False
@@ -31,7 +31,7 @@ class camera(Thread):
 if __name__== "__main__":
     cameraThread = camera()
     cameraThread.start()
-    sleep(1)
+    sleep(3)
     while (True):
         cv2.imshow("test",cameraThread.frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
