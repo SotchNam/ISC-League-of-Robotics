@@ -11,8 +11,8 @@ import time
 #x1,y1=150,0
 #x2,y2=500,300
 #using relative resolution
-x1,y1=0.3,0
-x2,y2=0.4,0.25
+x1,y1=0.0,0
+x2,y2=0.2,0.2
 
 class scanColor(Thread):
     def __init__(self):
@@ -60,7 +60,7 @@ class scanColor(Thread):
                 avg_color = np.average(avg_color_per_row, axis=0)
                 self.avgColor = avg_color
                 self.croppedImage = imageFrame
-                print(avg_color)
+                #print(avg_color)
 
                 #test the avg color with each color range
                 #print(self.frame)

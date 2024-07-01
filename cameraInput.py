@@ -15,8 +15,8 @@ class camera(Thread):
 
     def run(self):
         self.on = True
-        self.webcam.set(3, 320)
-        self.webcam.set(4, 240)
+        self.webcam.set(3, 160)
+        self.webcam.set(4, 120)
         self.webcam.set(cv2.CAP_PROP_AUTO_EXPOSURE,0)
         self.webcam.set(cv2.CAP_PROP_AUTO_WB,0)
         while self.on:

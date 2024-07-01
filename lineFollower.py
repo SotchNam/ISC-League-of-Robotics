@@ -35,7 +35,7 @@ class line_follow(Thread):
                 # Gaussian blur
                 blur = cv2.GaussianBlur(gray, (5, 5), 0)
                 # Color thresholding
-                ret, thresh1 = cv2.threshold(blur, 30, 255, cv2.THRESH_BINARY_INV)
+                ret, thresh1 = cv2.threshold(blur, 24, 255, cv2.THRESH_BINARY_INV)
                 # Erode and dilate to remove accidental line detections
                 mask = cv2.erode(thresh1, None, iterations=2)
                 mask = cv2.dilate(mask, None, iterations=2)
@@ -51,6 +51,7 @@ class line_follow(Thread):
 
                 # Find the biggest contour (if detected)
                 if len(contours) > 0:
+                    self.no_line = False
                     c = max(contours, key=cv2.contourArea)
                     M = cv2.moments(c)
                     self.cx = int(M['m10'] / M['m00'])
@@ -75,11 +76,45 @@ class line_follow(Thread):
 
 if __name__ == '__main__':
     try:
+        import RPi.GPIO as gpio
+        import Falcon
+        from main import forwardTimed
         webcam = cv2.VideoCapture(0)
         webcam.set(3, 320)
         webcam.set(4, 240)
         webcam.set(cv2.CAP_PROP_AUTO_EXPOSURE,0)
         webcam.set(cv2.CAP_PROP_AUTO_WB,0)
+
+
+        #-------#Setup Pinouts-------#
+        max_speed= 48 # from 100
+        min_speed= 20
+        min_speed2= 15
+
+        en1=20
+        en2=21
+        in1=17
+        in2=22
+        in3=23
+        in4=24
+        gpio.setmode(gpio.BCM)
+        gpio.setup(in1, gpio.OUT)
+        gpio.setup(in2, gpio.OUT)
+        gpio.setup(in3, gpio.OUT)
+        gpio.setup(in4, gpio.OUT)
+        gpio.setup(en1,gpio.OUT)
+        gpio.setup(en2,gpio.OUT)
+        #p1 = gpio.PWM(en1, 100)
+        #p2 = gpio.PWM(en2, 100)
+        Falcon.Stop()
+        #----------------------------#
+        imageWidth = 320 #lineThread.frame.shape[1] # = 320
+        leftMostBound= imageWidth*0.255
+        leftBound = imageWidth*0.45
+        center = imageWidth / 2 # 80
+        rightBound = imageWidth*0.55
+        rightMostBound= imageWidth*0.705
+
         _, imageFrame = webcam.read()
         lineThread = line_follow()
         lineThread.frame = imageFrame
@@ -89,9 +124,43 @@ if __name__ == '__main__':
             _, imageFrame = webcam.read()
             #imageFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2RGB)
             lineThread.frame = imageFrame
-            cv2.imshow("Frame", lineThread.croppedImage) 
-            cv2.imshow("test", imageFrame)
+            #cv2.imshow("Frame", lineThread.croppedImage) 
+            #cv2.imshow("test", imageFrame)
             print(lineThread.cx)
+
+
+            try:
+                if lineThread.no_line == False:
+                    if cx < leftMostBound:
+                        #Falcon.Forward(0,max_speed+20)
+                        forwardTimed(min_speed2,max_speed,0.3)
+                        print("left more")
+                    elif cx <= leftBound and cx >= leftMostBound:
+                        #Falcon.Forward(max_speed,min_speed) # forward(min,max)
+                        forwardTimed(min_speed,max_speed,0.05)
+                        print("left")
+                    elif cx <= rightBound and cx >= leftBound:
+                        Falcon.Forward(max_speed)
+                        print("forward")
+                    elif cx >= rightBound and cx <= rightMostBound:
+                        #Falcon.Forward(min_speed,max_speed) # forward(min,max)
+                        forwardTimed(max_speed,min_speed,0.05)
+                        print("right")
+                    elif cx >= rightMostBound:
+                        #Falcon.Forward(max_speed+20,0)
+                        forwardTimed(max_speed,min_speed2,0.3)
+                        print("right more")
+                    #time.sleep(0.05)
+
+                else:
+                    forwardTimed(min_speed,min_speed,0.2)
+                    #Falcon.Forward(max_speed)
+                    print("no line")
+                    #Falcon.Stop() # continue previous action
+                    #sleep(2) # enough time for line cut 15cm dist
+            except TypeError:
+                pass
+
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                     lineThread.stop()

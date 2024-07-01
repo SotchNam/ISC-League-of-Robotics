@@ -46,10 +46,10 @@ t1=3
 speed=100
 en1=20
 en2=21
-in3=17
-in4=22
-in1=23
-in2=24
+in3=22
+in4=17
+in1=24
+in2=23
 #Setting DC Motors Controllers:
 gpio.setmode(gpio.BCM)
 gpio.setup(in1, gpio.OUT)
@@ -170,23 +170,27 @@ def Zero():
 def Forward(speed1, speed2=None):
     if speed2 is None:
         speed2 = speed1
-    gpio.setmode(gpio.BCM)
-    gpio.setup(in1, gpio.OUT)
-    gpio.setup(in2, gpio.OUT)
-    gpio.setup(in3, gpio.OUT)
-    gpio.setup(in4, gpio.OUT)
-    gpio.setup(en1,gpio.OUT)
-    gpio.setup(en2,gpio.OUT)
+    #gpio.setmode(gpio.BCM)
+    #gpio.setup(in1, gpio.OUT)
+    #gpio.setup(in2, gpio.OUT)
+    #gpio.setup(in3, gpio.OUT)
+    #gpio.setup(in4, gpio.OUT)
+    #gpio.setup(en1,gpio.OUT)
+    #gpio.setup(en2,gpio.OUT)
     pwm1=gpio.PWM(en1,100)
     pwm2=gpio.PWM(en2,100)
-    pwm1.start(speed1) # right
     pwm2.start(speed2) # left
+    time.sleep(0.01)
+    pwm1.start(speed1) # right
+    time.sleep(0.01)
+    #gpio.output(en1, speed1)
+    #gpio.output(en2, speed2)
 
     gpio.output(in1, False)
     gpio.output(in2, True)
     gpio.output(in3, False)
     gpio.output(in4, True) 
-    print("FORWARD")
+    #print("FORWARD")
     #time.sleep(0.5)
         
 def Backward(speed):
@@ -260,7 +264,6 @@ def Stop():
     gpio.output(in2, False)
     gpio.output(in3, False)
     gpio.output(in4, False)
-    gpio.cleanup()
     
 def Cleanup():
     gpio.cleanup()
@@ -451,9 +454,15 @@ if __name__ == "__main__":
     gpio.setup(en2,gpio.OUT)
     gpio.setup(26,gpio.OUT)
     try:
+        duration = 5
         while True:
-            Forward(100);
-            #gpio.output(26, False)
+            start_time = time.time()
+            while time.time() - start_time < duration:
+                Forward(0,0)
+
+            #start_time = time.time()
+            #while time.time() - start_time < duration:
+                #Forward(100,0)
     except KeyboardInterrupt:
         Cleanup()
 

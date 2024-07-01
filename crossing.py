@@ -3,7 +3,7 @@ import RPi.GPIO as GPIO
 import time
 from threading import Thread
 # set GPIO Pins
-GPIO.setmode(GPIO.BCM)
+#GPIO.setmode(GPIO.BCM)
 
 GPIO_TRIGGER = 8
 GPIO_ECHO = 25
@@ -32,6 +32,7 @@ class distance(Thread):
         while self.on:
             #delay to improve threading, removes stress from cpu
             time.sleep(0.1)
+            #GPIO.setmode(GPIO.BCM)
             # set Trigger to HIGH
             GPIO.output(GPIO_TRIGGER, True)
             # set Trigger after 0.01ms to LOW
@@ -54,6 +55,7 @@ class distance(Thread):
             # multiply with the sonic speed (34300 cm/s)
             # and divide by 2, because there and back
             self.dist= (TimeElapsed * 34300) / 2
+        time.sleep(0.15)
 
         def stop(self):
             self.on = False
@@ -65,9 +67,10 @@ if __name__ == '__main__':
      try:
          while True:
              print ("Measured Distance = %.1f cm" % distanceThread.dist)
-             time.sleep(1)
+             #time.sleep(1)
 #
 #         # Reset by pressing CTRL + C
      except KeyboardInterrupt:
          print("Measurement stopped by User")
          distanceThread.stop()
+         GPIO.cleanup()
